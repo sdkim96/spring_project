@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,wght@1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+/* @font-face {
+  font-family: 'MyFont';
+  src: url('/home/azureuser/projects/aerius/myweb/frontend/src/components/fonts/Georgia Regular font.ttf') format('truetype');
+} */
+
+nav {
+  background-color: #ffffff;
+  padding: 30px;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed; /* 'sticky'를 'fixed'로 변경 */
+  top: 0; /* 화면 상단에 고정 */
+  left: 0; /* 화면 좌측에 고정 */
+  right: 0; /* 화면 우측에 고정. 이를 통해 네비게이션 바가 항상 전체 너비를 차지하게 됩니다. */
+  z-index: 999; /* 다른 요소들 위에 렌더링되도록 z-index를 높게 설정 */
+}
+
+.words {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+  width: 300px;
+  align-content: center;
+}
+
+.words.fade {
+  opacity: 0;
+}
+
+.words.korean {
+  font-size: 1.2em;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.logo a:link, .logo a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+
+nav::after {
+  content: "";
+  position: absolute;
+  left: 30%; /* 80%의 길이를 가지려면 양쪽에 10%씩 공간을 둡니다. */
+  right: 30%;
+  bottom: 0; /* 하단에 위치하도록 설정 */
+  border-bottom: 1px solid #000000; /* 하단 테두리를 그립니다. */
+}
+
+
+
+
+nav .logo {
+/* left: 50%; /* 로고를 수평 방향 중앙으로 이동 */
+/* transform: translateX(-50%); 로고의 중심을 정확히 수평 중앙으로 이동 */
+font-family: 'Noto Sans KR', serif;
+font-size: 50px;  /* 글자 크기를 조절. 필요에 따라 조절 */
+line-height: 60px; /* nav 바 높이와 동일하게 설정 */
+text-transform: uppercase;
+/* font-weight: bold; */
+/* text-align: center; */
+vertical-align: middle; /* 세로 중앙 정렬 */
+
+}
+
+nav .words {
+  font-family: 'EB Garamond', serif;
+  font-size: 20px;
+  position: relative;
+  list-style: none;
+  padding: 0px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center; /* 수평 리스트 아이템을 세로 중앙 정렬 */
+  height: 100%;
+  text-align: center;
+}
+
+nav ul {
+  position: relative;
+  list-style: none;
+  padding: 0px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center; /* 수평 리스트 아이템을 세로 중앙 정렬 */
+  height: 100%; /* ul의 높이를 nav 바 높이와 일치시킴 */
+}
+
+nav ul li {
+  display: inline;
+  padding-left: 20px;  /* add space between list items */
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 1em;
+  font-weight: lighter;  /* adjust size as needed */
+  font-family: 'Malgun Gothic', Lato, monospace, Corbel, Dotum, AppleGothic, Helvetica, sans-serif;
+}

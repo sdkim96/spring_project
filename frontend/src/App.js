@@ -4,11 +4,18 @@ import './App.css';
 import MainPage from './components/js/mainpage';
 import NavBar from './components/js/navbar';
 import Footer from './components/js/footer';
-
+import LoginPage from './components/js/loginpage';
+import MapPage from './components/js/mappage';
+import MapSearchHistoryPage from './components/js/mapsearchhistorypage';
 
 const App = () => {
 
-  // 아래 주석문들은 백엔드의 jwt와 staff 알고리즘이 만들어지면 다시 살림
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  const state = urlParams.get('state');
+
+  console.log(code);
+  console.log(state);
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [isStaff, setIsStaff] = useState(false);
@@ -33,9 +40,12 @@ const App = () => {
 
   return (
     <BrowserRouter>
-    <NavBar />
+    {/* <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} isStaff={isStaff} setIsStaff={setIsStaff} /> */}
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/map" element={<MapPage />} />
+        <Route path="/mapsearchhistorypage" element={<MapSearchHistoryPage />} />
       </Routes>
     <Footer />
     </BrowserRouter>
