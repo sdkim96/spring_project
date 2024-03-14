@@ -9,18 +9,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import web.web1.Map.domain.map.AddressRequest;
+import web.web1.Map.domain.map.GeoCoding;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import web.web1.Map.map.AddressRequest;
-import web.web1.Map.map.GeoCoding;
-
 @RestController
 public class EgovSampleController {
   
-  @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+//   @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
   @PostMapping("/map/getaddress")
   public void getAddrApi(@RequestBody AddressRequest request, HttpServletResponse response) throws Exception {
     System.out.println("도로명 주소 받기 시작");
@@ -59,7 +59,7 @@ public class EgovSampleController {
 	response.getWriter().write(sb.toString()); // 외부 API로부터 받은 응답을 클라이언트로 전송
   }
 
-  @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+//   @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
   @PostMapping("/map/getgeocoding")
   public void getGeoCoding(@RequestBody GeoCoding request, HttpServletResponse response) throws Exception {
     System.out.println("지오코딩 시작");

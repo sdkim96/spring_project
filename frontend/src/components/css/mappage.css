@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,wght@1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+
+
+.map-page{
+    padding-top: 150px;
+    width: 100%;
+    height: auto;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.juso-query{
+    width: 100%;
+    height: 400px;
+    padding-top: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+#juso-form{
+    width:auto;
+    height:70%;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    font-family: 'Noto Sans KR', sans-serif;
+    gap: 50px; 
+
+}
+
+#juso-form input{
+    width: 60%;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    height: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+
+}
+
+
+button[id='mappage-button'] {
+    width: 10%;
+    background-color: #ffb497; /* 파란색 파스텔 색상 */
+    border: 5px solid transparent; /* 테두리 설정, 필요에 따라 색상 조정 가능 */
+    height: 50px;
+    border-radius: 5px; /* 꼭지점을 둥글게 */
+    transition: transform 0.3s ease-in-out, background-color 0.5s; /* 애니메이션 효과를 위한 transition 설정 */
+    font-size: 1.5em; /* 글자 크기 */
+    font-weight: bold;
+}
+
+button[id='mappage-button']:hover {
+    transform: translateY(-5px); /* 마우스 오버 시 버튼을 위로 5px 이동 */
+    cursor: pointer; /* 마우스 오버 시 커서 모양 변경 */
+    background-color: #ffdec8;
+}
+
+.juso-results{
+    width: 100%;
+    height: 800px;
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: row;
+}
+
+.map-container{
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.juso-list{
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+nav[id='juso-pagination'] ul {
+    list-style-type: none; /* 점 표시를 제거합니다 */
+    padding: 0; /* 기본 패딩을 제거합니다 */
+    display: flex; /* flexbox 레이아웃을 사용하여 항목을 가로로 배열합니다 */
+    justify-content: center; /* 가운데 정렬합니다 */
+    gap: 8px; /* 항목 사이의 간격을 조정합니다 */
+}
+
+nav[id='juso-pagination'] .page-link {
+    display: inline-block; /* 버튼을 인라인 블록 요소로 만들어 줍니다 */
+    padding: 8px 16px; /* 상하, 좌우 패딩을 줍니다 */
+    background-color: #007bff; /* 버튼 배경색을 지정합니다 */
+    color: white; /* 글자색을 흰색으로 지정합니다 */
+    border-radius: 5px; /* 버튼 모서리를 둥글게 합니다 */
+    text-decoration: none; /* 링크에 기본으로 적용되는 밑줄을 제거합니다 */
+    font-weight: bold; /* 글자를 굵게 합니다 */
+    transition: background-color 0.3s ease-in-out; /* 배경색 변경에 애니메이션 효과를 줍니다 */
+}
+
+nav[id='juso-pagination'] .page-link:hover {
+    background-color: #0056b3; /* 마우스 호버 시 버튼의 배경색을 어둡게 변경합니다 */
+    cursor: pointer; /* 마우스 호버 시 커서 모양을 변경합니다 */
+}
+

@@ -7,44 +7,46 @@ import Footer from './components/js/footer';
 import LoginPage from './components/js/loginpage';
 import MapPage from './components/js/mappage';
 import MapSearchHistoryPage from './components/js/mapsearchhistorypage';
+import JoinPage from './components/js/joinpage';
+import { useCookies } from 'react-cookie';
 
 const App = () => {
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
-  const state = urlParams.get('state');
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const code = urlParams.get('code');
+  // const state = urlParams.get('state');
 
-  console.log(code);
-  console.log(state);
+  // console.log(code);
+  // console.log(state);
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [isStaff, setIsStaff] = useState(false);
+  const [cookies] = useCookies(['token']);
+  const tokenFromCookies = cookies.token;
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if(token) {
-  //     setIsLoggedIn(true);
-  //   } else {
-  //     setIsLoggedIn(false);
-  //   }
-  // }, []);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(() => {
-  //   const level = Number(localStorage.getItem('level'));
-  //   if (level>=2 && isLoggedIn) {
-  //     setIsStaff(true);
-  //   } else {
-  //     setIsStaff(false);
-  //   }
-  // }, [isLoggedIn]);
+  useEffect(() => {
+    if (tokenFromCookies) {
+      console.log("Cookie Token", tokenFromCookies);
+      setIsLoggedIn(true);
+    } else {
+      const tokenFromLocalStorage = localStorage.getItem('token');
+      if(tokenFromLocalStorage) {
+        setIsLoggedIn(true);
+        console.log("Local Storage Token", tokenFromLocalStorage);
+      } else {
+        setIsLoggedIn(false);
+      }
+      // setIsLoggedIn(false);
+    }
+  }, []);
 
   return (
     <BrowserRouter>
-    {/* <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} isStaff={isStaff} setIsStaff={setIsStaff} /> */}
+    <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/map" element={<MapPage />} />
+        <Route path="/" element={<MapPage />} />
+        <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/join" element={<JoinPage />} />
         <Route path="/mapsearchhistorypage" element={<MapSearchHistoryPage />} />
       </Routes>
     <Footer />

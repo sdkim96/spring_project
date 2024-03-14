@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+.join-page {
+    padding-top: 150px;
+    width: 100%;
+    height: auto;
+}
+
+.join-box {
+    display: flex;
+    padding: 100px;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+form[name='join-form']{
+    width: 600px;
+}
+
+input{
+    width: 600px;
+}
+
+input[type=password]
+{
+    border: none; /* 모든 테두리를 없앰 */
+    border-bottom: 1px solid #000; /* 아래쪽 테두리만 표시 */
+    background: transparent; /* 배경을 투명하게 */
+    height: 28px;
+}
+
+.join-text{
+    font-size: 2em;
+    font-family: 'Playfair Display', serif;
+}
+
+.warning {
+    color: red;
+}
+
+button[id="join-button"]{
+    width:30%;
+    background-color :white;
+    border-width: 1px;
+    height: 28px;
+}
