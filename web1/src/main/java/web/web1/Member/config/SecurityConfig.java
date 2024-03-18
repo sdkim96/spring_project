@@ -28,8 +28,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/member/logouts").permitAll() //로그아웃
                 .requestMatchers("member/login").permitAll() //로그인
+                .requestMatchers("/member/join").permitAll()
                 .requestMatchers("/map/getaddress").permitAll() //주소검색
                 .requestMatchers("/map/getgeocoding").permitAll() //좌표검색
+                .requestMatchers("/memberpage/queryhistory").permitAll()
+                .requestMatchers("/memberpage/userprofile").permitAll()
+                .requestMatchers("/memberpage/userprofile/update").permitAll()
+                .requestMatchers("/memberpage/recommend").permitAll()
+                .requestMatchers("/user_profile_photos/**").permitAll()
                 .anyRequest().authenticated())
             .oauth2Login(oauth2 -> oauth2 //OAuth2 로그인
                 .userInfoEndpoint()

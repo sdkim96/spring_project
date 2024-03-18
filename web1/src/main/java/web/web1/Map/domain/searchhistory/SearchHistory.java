@@ -6,26 +6,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
+import ch.qos.logback.core.subst.Token;
+import lombok.RequiredArgsConstructor;
 import web.web1.Member.domain.models.Member;
 import web.web1.Member.domain.token.TokenFactory;
 
-
+@Service
+@RequiredArgsConstructor
 public class SearchHistory {
-
-    private TokenFactory tokenFactory;
+    
+    private final ApplicationContext applicationContext;
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public SearchHistory(JdbcTemplate jdbcTemplate, TokenFactory tokenFactory, Member member) {
-        this.tokenFactory = tokenFactory;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    
     
 
     public List<Map<String, Object>> getHistory(String tokenValue) {
+
+        TokenFactory tokenFactory = applicationContext.getBean("googleTokenFactory", TokenFactory.class);
+
         
         // 이 메소드는 user와 admin인 경우 실행 가능함
         List<String> allowedRoles = Arrays.asList("USER", "ADMIN");
@@ -44,7 +47,7 @@ public class SearchHistory {
             String email = jdbcTemplate.queryForObject(sql1, String.class, oauth2Id);
 
             if (email != null) {
-                String sql2 = "SELECT * FROM memberhistory WHERE email = ?";
+                String sql2 = "SELECT * FROM member_history WHERE email = ?";
                 List<Map<String, Object>> historyList = jdbcTemplate.queryForList(sql2, email);
                 return historyList;
             } else {
@@ -60,11 +63,31 @@ public class SearchHistory {
     }
 
     public void createHistory(String tokenValue, String searchQuery) {
+        if (tokenValue == null) {
+            System.out.println("토큰값이 없습니다. 이 작업을 실행할 수 없습니다.");
+            return; // 조기 반환
+        }
+
+        TokenFactory tokenFactory = applicationContext.getBean("googleTokenFactory", TokenFactory.class);
 
         // 이 메소드는 user와 admin인 경우 실행 가능함
         List<String> allowedRoles = Arrays.asList("USER", "ADMIN");
+        Map<String, Object> decodedToken = null;
 
-        Map<String, Object> decodedToken = tokenFactory.decodeToken(tokenValue);
+        try{
+            decodedToken = tokenFactory.decodeToken(tokenValue);
+            if (decodedToken.isEmpty()) {
+                System.out.println("토큰 디코드 중 오류가 발생했습니다.");
+                return;
+            } else {
+                System.out.println("토큰 디코드 성공");
+            }
+        } catch (Exception e) {
+            System.out.println("토큰 디코드 중 오류가 발생했습니다.");
+            return;
+        }
+
+        
         String oauth2Id = (String) decodedToken.get("oauth2Id");
 
         Boolean isChecked = tokenFactory.checkToken(tokenValue, allowedRoles);
@@ -79,7 +102,7 @@ public class SearchHistory {
             if (email != null) {
                 // 현재 시간을 검색 기록의 시간으로 사용
                 LocalDateTime searchDateTime = LocalDateTime.now();
-                String sql2 = "INSERT INTO memberhistory (email, search_query, search_datetime) VALUES (?, ?, ?)";
+                String sql2 = "INSERT INTO member_history (email, search_query, search_date_time) VALUES (?, ?, ?)";
                 jdbcTemplate.update(sql2, email, searchQuery, searchDateTime);
                 System.out.println("검색 기록이 추가되었습니다.");
             } else {
@@ -92,6 +115,8 @@ public class SearchHistory {
 
 
     public void deleteHistory(String tokenValue) {
+
+        TokenFactory tokenFactory = applicationContext.getBean("googleTokenFactory", TokenFactory.class);
 
         List<String> allowedRoles = Arrays.asList("USER", "ADMIN");
 

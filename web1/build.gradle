@@ -55,6 +55,7 @@ dependencies {
 
 	// implementation 'jakarta.persistence:jakarta.persistence-api:3.0.0'
 	implementation 'org.springframework.boot:spring-boot-devtools' // 파일 변경이 감지되면 자동으로 앱을 재실행해줌
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

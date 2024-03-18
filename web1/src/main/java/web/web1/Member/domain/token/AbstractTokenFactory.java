@@ -46,10 +46,21 @@ public abstract class AbstractTokenFactory implements TokenFactory {
 
     @Override
     public Map<String, Object> decodeToken(String tokenValue) {
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-        Jws<Claims> claimJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenValue);
-        return new HashMap<>(claimJws.getBody());
+        try {
+            if (tokenValue == null || tokenValue.trim().isEmpty()) {
+                System.out.println("토큰값이 없거나 유효하지 않습니다.");
+                return new HashMap<>(); // 빈 맵 반환
+            }
+
+            Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+            Jws<Claims> claimJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(tokenValue);
+            return new HashMap<>(claimJws.getBody());
+        } catch (Exception e) {
+            System.out.println("토큰 디코드 중 오류가 발생했습니다: " + e.getMessage());
+            return new HashMap<>(); // 예외 발생 시 빈 맵 반환
+        }
     }
+
 
     @Override
     public Boolean isExpired(String exp) {

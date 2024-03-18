@@ -6,6 +6,7 @@ public class AddressRequest {
     private String resultType;
     private String confmKey;
     private String keyword;
+    private String provider;
 
     // Getter and Setter methods
 
@@ -47,5 +48,13 @@ public class AddressRequest {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 }

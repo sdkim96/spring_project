@@ -12,8 +12,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
     const navigate = useNavigate();
 
-
-
+    
     const words = (latin, korean, mouseover) => {
         if (mouseover) {
             setFade(true);
@@ -39,14 +38,14 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
 
         console.log("tokenFromLocalStorage:", tokenFromLocalStorage)
         console.log("tokenFromCookies:", tokenFromCookies)
-        // Determine the token source and provider
+
         let token, provider;
         if (tokenFromLocalStorage) {
             token = tokenFromLocalStorage;
-            provider = "web1"; // Set provider for localStorage token
+            provider = "web1"; 
         } else if (tokenFromCookies) {
             token = tokenFromCookies;
-            provider = "google"; // Set provider for cookie token
+            provider = "google"; 
         }
 
         console.log(token, provider);
@@ -59,17 +58,17 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ "provider" : provider }) // Use dynamic provider
+                    body: JSON.stringify({ "provider" : provider }) 
                 });
 
                 const data = await response.json();
                 console.log(data);
                 if (response.ok) {
                     console.log('Logout successful');
-                    setIsLoggedIn(false); // Update login state
-                    localStorage.removeItem('token'); // Remove token from localStorage if present
+                    setIsLoggedIn(false); 
+                    localStorage.removeItem('token'); 
                     removeCookie('token');
-                    navigate ('/'); // Remove token cookie if present
+                    navigate ('/'); 
                 } else {
                     console.log('Logout failed');
                 }
@@ -82,8 +81,6 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
         }
     }
     
-    
-        // Now, send a logout request to the server
         
 
     // authorize url로 접속하려는 사이트 정보, 인증 토큰 보내야됨
@@ -98,7 +95,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
             const response = await fetch('http://localhost:8000/myapp/authorize/', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,  // Include the token in the Authorization header
+                    'Authorization': `Bearer ${token}`,  
                     'Content-Type': 'application/json'
                 }, 
                 body: JSON.stringify({ 'work': url })  // body에 JSON 형태로 데이터를 전달합니다.
@@ -121,60 +118,39 @@ const NavBar = ({isLoggedIn, setIsLoggedIn}) =>{
         }
     }
 
-    const handleMypage = async () =>{
-        const token = localStorage.getItem('token');
-        const url = 'to_mypage_url'
-
-        
-        try{
-            const response = await fetch('http://localhost:8000/myapp/authorize/', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({'work': url})
-            });
-
-            const data = await response.json();
-
-            if (data.result) {
-                window.location.href = 'http://localhost:3000/mypage/';
-            } else {
-                window.location.href = 'http://localhost:3000/noauthorize/';
-            }
-
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
-    }
-    
-
     return(
         <nav id='site-navbar'>
-            <p 
-                className={`words ${fade ? 'fade' : ''} ${isKorean ? 'korean' : ''}`}
-                onMouseOver={() => words('Didim365', 'By AI MSP 기술센터 김성동 사원', true)}
-                onMouseOut={() => words('Didim365', 'By AI MSP 기술센터 김성동 사원', false)}
-            >
-                {word}
-            </p>
-            <p className='logo'><a href='/'>스프링 기반 도로명주소 찾기 서비스</a></p>
-            <ul>
-                {
-                    isLoggedIn
-                    ? <>
-                        {/* { isStaff 
-                            ? <li><a href="#" onClick={handleStaff}>admin</a></li>
-                            : <li><a href="#" onClick={handleMypage}>mypage</a></li> 
-                        } */}
-                        <li><a href="/" onClick={handleLogout}>logout</a></li>
-                        <li><a href="/" onClick={handleMypage}>mypage</a></li>
-                        <li><a href="/" onClick={handleStaff}>staff</a></li>
-                    </>
-                    : <li><NavLink to="/login">login</NavLink></li>
-                }
-            </ul>
+            <div className='menu-toggle'>
+                <ul>
+                    {
+                        isLoggedIn
+                        ? <>
+                            {/* { isStaff 
+                                ? <li><a href="#" onClick={handleStaff}>admin</a></li>
+                                : <li><a href="#" onClick={handleMypage}>mypage</a></li> 
+                            } */}
+                            <li><a href="/" onClick={handleLogout}>logout</a></li>
+                            <li><NavLink to = "/mypage">mypage</NavLink></li>
+                            <li><a href="/" onClick={handleStaff}>staff</a></li>
+                        </>
+                        : <li><NavLink to="/login">login</NavLink></li>
+                    }
+                </ul>
+            </div>   
+            <div className="logo-words">
+                <div className='logo-container'>
+                    <p className='logo'><a href='/'>스프링 기반 도로명주소 찾기 서비스</a></p>
+                </div>
+                <div className="word">
+                    <p 
+                        className={`words ${fade ? 'fade' : ''} ${isKorean ? 'korean' : ''}`}
+                        onMouseOver={() => words('Didim365', 'By AI MSP 기술센터 김성동 사원', true)}
+                        onMouseOut={() => words('Didim365', 'By AI MSP 기술센터 김성동 사원', false)}
+                    >
+                        {word}
+                    </p>
+                </div>
+            </div>
         </nav>
     )
 }

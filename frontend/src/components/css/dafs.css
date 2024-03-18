@@ -1,0 +1,91 @@
+
+
+#site-navbar p.logo {
+    flex-grow: 1; /* 로고가 네비게이션 바를 꽉 채우도록 조정 */
+    font-weight: bold;
+    color: #333;
+  }
+  
+  #site-navbar .logo a {
+    text-decoration: none;
+    color: #333;
+  }s
+  
+  .logo a:link, .logo a:visited {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  nav[id='site-navbar']::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 2px solid #f0f0f0; /* 네비게이션 바 하단에 더 두꺼운 경계선 추가 */
+  }
+  
+  nav[id='site-navbar'] .words {
+    font-family: 'Noto Sans KR', sans-serif; /* 기본 텍스트에 Noto Sans KR 폰트 적용 */
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    top: 50%; /* 상단으로부터 50% 위치에 */
+    left: 50%; /* 좌측으로부터 50% 위치에 */
+    transform: translate(-50%, -50%); /* 정중앙에 배치 */
+    font-weight: bold;
+    color: #333;
+  }
+  
+  nav[id='site-navbar'] ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute; /* 절대 위치 사용 */
+    top: 0;
+    left: 0; /* 왼쪽 상단에 위치시킴 */
+    display: flex;
+    flex-direction: row; /* 아이템을 세로로 쌓음 */
+    font-weight: bold;
+    color: #333;
+  }
+  
+  nav[id='site-navbar'] ul li {
+    margin-left: 20px; /* 리스트 아이템 사이의 간격 조정 */
+  }
+  
+  nav[id='site-navbar'] ul li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+    margin: 10px 0; /* 상하 간격 조정 */
+  }
+  
+  nav[id='site-navbar'] ul li a:hover, nav[id='site-navbar'] ul li a:focus {
+    color: #007bff; /* 링크 호버 및 포커스 시 색상 변경 */
+  }
+  
+  @media (max-width: 768px) {
+    #site-navbar {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    #site-navbar .logo, #site-navbar .words {
+      position: static; /* 모바일 뷰에서는 정적 위치 */
+      transform: none;
+      margin-bottom: 10px;
+      flex-grow: 0; /* 너비를 자동으로 설정하도록 변경 */
+    }
+  
+    #site-navbar ul {
+      position: static; /* 모바일 뷰에서는 정적 위치 */
+      flex-direction: row; /* 아이템을 가로로 나열 */
+    }
+  
+    #site-navbar ul li a {
+      margin: 0 10px; /* 좌우 간격 조정 */
+    }
+  }

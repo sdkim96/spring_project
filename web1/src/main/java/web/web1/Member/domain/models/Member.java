@@ -2,11 +2,11 @@ package web.web1.Member.domain.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import web.web1.Map.domain.models.MemberHistory;
+import web.web1.Map.domain.models.Recommend;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import web.web1.Map.domain.MemberHistory;
 
 @Entity
 @NoArgsConstructor
@@ -14,6 +14,7 @@ import web.web1.Map.domain.MemberHistory;
 @Setter
 public class Member {
     @Id
+    @Column(length = 191) // MySQL/MariaDB의 UTF8MB4 인코딩에서 최대 인덱스 길이를 고려
     private String email; // 유저 구글 이메일을 기본키로 사용
     
     private String oauth2Id;
@@ -22,9 +23,13 @@ public class Member {
     private String role; //유저 권한 (일반 유저, 관리자)
     private String provider; //공급자 (google, facebook ...)
     private String providerId; //공급 아이디
+    private String photoPath; //프로필 이미지
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberHistory> userHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommend> userRecommed = new ArrayList<>();
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Token token;
@@ -38,5 +43,6 @@ public class Member {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.photoPath = photoPath;
     }
 }

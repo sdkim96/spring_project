@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.context.ApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,20 +34,13 @@ import web.web1.Member.domain.token.TokenFactory;
 public class MemberController {
     private final BCryptPasswordEncoder encoder;
     private final MemberRepository memberRepository;
-
-    @Autowired
-    private GoogleTokenFactory googleTokenFactory;
-
-    @Autowired
-    private NormalTokenFactory normalTokenFactory;
-
-    @Autowired
-    private TokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
+    private final GoogleTokenFactory googleTokenFactory;
+    private final NormalTokenFactory normalTokenFactory;
+    private final ApplicationContext applicationContext;
+    
 
     private AbstractTokenFactory abstractTokenFactory;
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     private Member member;
 
@@ -178,9 +170,6 @@ public class MemberController {
         TokenFactory tokenFactory = applicationContext.getBean(provider + "TokenFactory", TokenFactory.class);
         Map<String, Object> decodedToken = tokenFactory.decodeToken(tokenValue);
         String oauth2ID =  String.valueOf(decodedToken.get("oauth2Id"));
-
-        // 추상클래스를 통해 구현된 토큰팩토리를 가져옵니다.
-        
 
         // Member member, String tokenValue, List allowedRoles
         // 토큰 유효성 검사

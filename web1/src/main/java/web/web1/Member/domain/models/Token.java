@@ -19,7 +19,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 191) // 동일하게 적용
     private String email; // 유저의 이메일을 기본키로 사용
 
     private String tokenValue;

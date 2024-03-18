@@ -8,6 +8,7 @@ import LoginPage from './components/js/loginpage';
 import MapPage from './components/js/mappage';
 import MapSearchHistoryPage from './components/js/mapsearchhistorypage';
 import JoinPage from './components/js/joinpage';
+import MyPage from './components/js/mypage';
 import { useCookies } from 'react-cookie';
 
 const App = () => {
@@ -47,9 +48,8 @@ const App = () => {
         <Route path="/" element={<MapPage />} />
         <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/join" element={<JoinPage />} />
-        <Route path="/mapsearchhistorypage" element={<MapSearchHistoryPage />} />
+        <Route path="/mypage" element={<MyPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
       </Routes>
-    <Footer />
     </BrowserRouter>
   );
 }
