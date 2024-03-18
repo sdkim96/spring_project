@@ -1,0 +1,43 @@
+@startuml
+class Member {
+    - email: String
+    - name: String
+    - oauth2Id: String
+    - password: String
+    - role: String
+    - provider: String
+    - providerId: String
+}
+
+class Token {
+    - value: String
+    - createdTime: LocalDateTime
+    - expiredTime: LocalDateTime
+    - type: String
+    - member: Member
+}
+
+class AbstractTokenFactory {
+    # createToken(member: Member, code: String): String
+    # checkToken(tokenValue: String, allowedRoles: List<String>): Boolean
+    # decodeToken(tokenValue: String): Map<String, Object>
+    # isExpired(exp: String): Boolean
+    # deleteToken(oauth2Id: String): void
+}
+
+class NormalTokenFactory {
+    - tokenRepository: TokenRepository
+    + createToken(member: Member, code: String): String
+    + checkToken(tokenValue: String, allowedRoles: List<String>): Boolean
+}
+
+class OAuth2MemberService {
+    - encoder: BCryptPasswordEncoder
+    - memberRepository: MemberRepository
+    + loadUser(userRequest: OAuth2UserRequest): OAuth2User
+}
+
+Member "1" -- "0..*" Token : has ->
+AbstractTokenFactory <|-- NormalTokenFactory
+OAuth2MemberService ..> Member : manages ->
+@enduml
