@@ -1,4 +1,7 @@
 @startuml
+
+' 1. Models
+
 class Member {
     - email: String
     - name: String
@@ -10,34 +13,264 @@ class Member {
 }
 
 class Token {
-    - value: String
+    - id: Long
+    - email: String
+    - tokenValue: String
     - createdTime: LocalDateTime
     - expiredTime: LocalDateTime
     - type: String
     - member: Member
 }
 
-class AbstractTokenFactory {
-    # createToken(member: Member, code: String): String
-    # checkToken(tokenValue: String, allowedRoles: List<String>): Boolean
-    # decodeToken(tokenValue: String): Map<String, Object>
-    # isExpired(exp: String): Boolean
-    # deleteToken(oauth2Id: String): void
+class CafeTable {
+    - id: Long
+    - cafeName: String
+    - province: String
+    - cityDistrict: String
+    - neighborhood: String
+    - longitude: Double
+    - latitude: Double
 }
 
-class NormalTokenFactory {
-    - tokenRepository: TokenRepository
-    + createToken(member: Member, code: String): String
-    + checkToken(tokenValue: String, allowedRoles: List<String>): Boolean
+class MemberHistory {
+    - id: Long
+    - searchQuery: String
+    - email: String
+    - searchDateTime: LocalDateTime
+    - member: Member
+}
+
+class Recommend {
+    - id: Long
+    - email: String
+    - member: Member
+    - longitude: Double
+    - latitude: Double
+}
+
+Member "1" -- "*" Token : has >
+Member "1" -- "*" MemberHistory : has >
+Member "1" -- "*" Recommend : has >
+
+' 2. TokenFactories
+
+interface TokenFactory {
+    +createToken(member : Member, code : String) : String
+    +decodeToken(tokenValue : String) : Map
+    +checkToken(tokenValue : String, allowedRoles : List) : Boolean
+    +isExpired(exp : String) : Boolean
+    +deleteToken(oauth2Id : String) : void
+}
+
+abstract class AbstractTokenFactory implements TokenFactory {
+    -secretKey : String
+    -memberRepository : MemberRepository
+    -tokenRepository : TokenRepository
+    -jdbcTemplate : JdbcTemplate
+
+    +decodeToken(tokenValue : String) : Map
+    +isExpired(exp : String) : Boolean
+    +deleteToken(oauth2Id : String) : void
+    +checkToken(tokenValue : String, allowedRoles : List) : Boolean
+}
+
+class GoogleTokenFactory extends AbstractTokenFactory {
+    +createToken(member : Member, code : String) : String
+}
+
+class NormalTokenFactory extends AbstractTokenFactory {
+    +createToken(member : Member, code : String) : String
+}
+
+AbstractTokenFactory <|.. GoogleTokenFactory
+AbstractTokenFactory <|.. NormalTokenFactory
+AbstractTokenFactory <|.. TokenFactory : implements ->
+
+
+
+' 3. Oauth2 Services
+INTERFACE OAuth2MemberInfo {
+    + getProviderId() : String
+    + getProvider() : String
+    + getName() : String
+    + getEmail() : String
+}
+
+CLASS GoogleMemberInfo {
+    - attributes : Map<String, Object>
+    + GoogleMemberInfo(attributes : Map<String, Object>)
+    + getProviderId() : String
+    + getProvider() : String
+    + getName() : String
+    + getEmail() : String
 }
 
 class OAuth2MemberService {
     - encoder: BCryptPasswordEncoder
     - memberRepository: MemberRepository
-    + loadUser(userRequest: OAuth2UserRequest): OAuth2User
+    + loadUser(OAuth2UserRequest): OAuth2User
 }
 
-Member "1" -- "0..*" Token : has ->
-AbstractTokenFactory <|-- NormalTokenFactory
-OAuth2MemberService ..> Member : manages ->
+class OAuth2TokenService {
+    - tokenRepository : TokenRepository
+    - googleTokenFactory : GoogleTokenFactory
+    + OAuth2TokenService(jdbcTemplate : JdbcTemplate, tokenRepository : TokenRepository)
+    + makeJwtToken(member : Member, serviceType : String, code : String) : String
+}
+
+class PrincipalDetails {
+    - member: Member
+    - attributes: Map<String, Object>
+    + PrincipalDetails(Member, OAuth2User)
+}
+
+class PrincipalDetailsService {
+    - memberRepository: MemberRepository
+    + loadUserByUsername(String): UserDetails
+}
+
+' 4. Repositories
+
+class MemberRepository {
+    + findByEmail(String): Member
+    + findByOauth2Id(String): Member
+    + findByName(String): Member
+    + save(Member): Member
+}
+
+class TokenRepository {
+    + findByMemberEmail(String): Token
+}
+
+
+MemberRepository ..> Member : manages ->
+TokenRepository ..> Token : manages ->
+
+' 5. Controllers
+
+class MemberController {
+    -BCryptPasswordEncoder encoder
+    -MemberRepository memberRepository
+    -TokenRepository tokenRepository
+    -GoogleTokenFactory googleTokenFactory
+    -NormalTokenFactory normalTokenFactory
+}
+
+class MemberPageController {
+    -TokenFactory tokenFactory
+    -SearchHistory searchHistory
+    -UserProfile userProfile
+    -CafeRecommendSystem cafeRecommendSystem
+    -JdbcTemplate jdbcTemplate
+}
+
+class EgovSampleController {
+    -SearchHistory searchHistory
+    -CafeRecommendSystem cafeRecommendSystem
+}
+
+MemberController --> BCryptPasswordEncoder
+MemberController --> MemberRepository
+MemberController --> TokenRepository
+MemberController --> GoogleTokenFactory
+MemberController --> NormalTokenFactory
+MemberPageController --> TokenFactory
+MemberPageController --> SearchHistory
+MemberPageController --> UserProfile
+MemberPageController --> CafeRecommendSystem
+MemberPageController --> JdbcTemplate
+EgovSampleController --> SearchHistory
+EgovSampleController --> CafeRecommendSystem
+
+
+' 6. map, searchhistory
+
+class AddressRequest {
+    - currentPage : int
+    - countPerPage : int
+    - resultType : String
+    - confmKey : String
+    - keyword : String
+    - provider : String
+    + getCurrentPage() : int
+    + setCurrentPage(currentPage : int) : void
+    + getCountPerPage() : int
+    + setCountPerPage(countPerPage : int) : void
+    + getResultType() : String
+    + setResultType(resultType : String) : void
+    + getConfmKey() : String
+    + setConfmKey(confmKey : String) : void
+    + getKeyword() : String
+    + setKeyword(keyword : String) : void
+    + getProvider() : String
+    + setProvider(provider : String) : void
+}
+
+class GeoCoding {
+    - address : String
+    + getAddress() : String
+    + setAddress(address : String) : void
+}
+
+class CafeRecommendSystem {
+    - jdbcTemplate : JdbcTemplate
+    - applicationContext : ApplicationContext
+    + createRecommend(tokenValue : String, givenLatitude : double, givenLongitude : double) : void
+    + getCafeRecommendList(givenLatitude : double, givenLongitude : double) : List<Map<String, Object>>
+}
+
+class SearchHistory {
+    - applicationContext : ApplicationContext
+    - jdbcTemplate : JdbcTemplate
+    + getHistory(tokenValue : String) : List<Map<String, Object>>
+    + createHistory(tokenValue : String, searchQuery : String) : void
+    + deleteHistory(tokenValue : String) : void
+}
+
+' 7. userprofile
+Class UserProfile {
+    - applicationContext : ApplicationContext
+    - jdbcTemplate : JdbcTemplate
+    + getUserProfile(String) : Map
+    + updateUserProfile(String, MultipartFile, String) : void
+    - savePhotoAndGetPath(MultipartFile, String) : String
+    - getExtension(String) : String
+}
+
+' 8. config
+
+Class SecurityConfig {
+    - oAuth2MemberService : OAuth2MemberService
+    - oAuth2TokenService : OAuth2TokenService
+    + securityFilterChain(HttpSecurity) : SecurityFilterChain
+}
+
+Class CustomAuthenticationSuccessHandler {
+    - oAuth2TokenService : OAuth2TokenService
+    + onAuthenticationSuccess(HttpServletRequest, HttpServletResponse, Authentication) : void
+}
+SecurityConfig --> OAuth2MemberService : uses
+SecurityConfig --> OAuth2TokenService : uses
+CustomAuthenticationSuccessHandler --> OAuth2TokenService : uses
+
+
+GoogleMemberInfo ..> OAuth2MemberInfo : implements
+
+
+OAuth2MemberService ..> Member : uses >
+OAuth2MemberService --> MemberRepository : uses ->
+PrincipalDetails ..> Member : wraps >
+PrincipalDetailsService --> MemberRepository : uses ->
+
+
+UserProfile ..> TokenFactory : uses ->
+
+
+OAuth2TokenService -down-> TokenRepository : uses
+OAuth2TokenService -right-> GoogleTokenFactory : uses
+GoogleTokenFactory ..> TokenRepository : uses
+GoogleTokenFactory ..> Member : uses
+
+
+
 @enduml
